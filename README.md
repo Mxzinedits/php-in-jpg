@@ -19,7 +19,6 @@ This tool is designed to support **PHP RCE polyglot techniques**, often used in 
 - Support for custom or default HTML/PHP templates with `{{COMMAND}}` and `{{OUTPUT}}`
 - Optional preview-only mode: show payload without writing files
 - Clean HTML output styling (terminal-like, via default template)
-- Fully CLI-friendly and cross-platform (Python 3.8+)
 
 ---
 
